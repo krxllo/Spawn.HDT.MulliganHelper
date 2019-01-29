@@ -42,6 +42,15 @@
     <PlatformTarget>x86</PlatformTarget>
     <DefineConstants>TRACE;DEBUG</DefineConstants>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Deploy|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Deploy\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Hearthstone Deck Tracker">
       <HintPath>..\lib\Hearthstone Deck Tracker.exe</HintPath>
@@ -62,6 +71,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MulliganHelper.cs" />
     <Compile Include="MulliganHelperPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -88,5 +98,9 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>if '$(ConfigurationName)' == 'Update HDT' powershell -ExecutionPolicy Unrestricted -NoProfile -File "$(SolutionDir)update-hdt.ps1" -ExecutableName "Hearthstone Deck Tracker.exe" -TargetDir "$(SolutionDir)lib"</PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>if '$(ConfigurationName)' == 'Deploy' copy /Y "$(TargetPath)" "%25appdata%25\HearthstoneDeckTracker\Plugins\$(TargetFileName)"
+if '$(ConfigurationName)' == 'Deploy' start /d "C:\Users\jchri\source\repos\Hearthstone-Deck-Tracker\Hearthstone Deck Tracker\bin\x86\Debug" HearthstoneDeckTracker.exe</PostBuildEvent>
   </PropertyGroup>
 </Project>
